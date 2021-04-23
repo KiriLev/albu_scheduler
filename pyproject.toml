@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "albu_scheduler"
+version = "0.1.0"
+description = "Scheduler for albumentations transforms"
+authors = ["Kiryl Liaushun <klmail98@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+albumentations = "^0.5.2"
+pytest = "^6.2.3"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+isort = "^5.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+skip = ".eggs,.pip-cache,.poetry,venv,.venv,libs"
