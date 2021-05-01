@@ -2,14 +2,14 @@ from unittest import mock
 
 import pytest
 
-from albu_scheduler import TransformSchedulerOnPlateau, TransformStepScheduler
+from albu_scheduler import TransformMultiStepScheduler, TransformSchedulerOnPlateau
 
 
 class TestTransformStepScheduler:
     def test_ok(self, image):
         transforms = [mock.MagicMock() for _ in range(4)]
 
-        scheduled_transform = TransformStepScheduler(
+        scheduled_transform = TransformMultiStepScheduler(
             transforms=transforms, milestones=[0, 5, 10]
         )
         scheduled_transform(image=image)
@@ -24,11 +24,19 @@ class TestTransformStepScheduler:
         transforms[2].assert_not_called()
         transforms[3].assert_not_called()
 
+    def test_no_zero_milestone(self):
+        transforms = [mock.MagicMock() for _ in range(4)]
+
+        scheduled_transform = TransformMultiStepScheduler(
+            transforms=transforms, milestones=[5, 10]
+        )
+        assert scheduled_transform.cur_transform.__class__.__name__ == "NoOp"
+
     def test_too_much_milestones_fails(self):
         transforms = [mock.MagicMock()]
         milestones = [i for i in range(100)]
         with pytest.raises(ValueError):
-            TransformStepScheduler(transforms=transforms, milestones=milestones)
+            TransformMultiStepScheduler(transforms=transforms, milestones=milestones)
 
 
 class TestTransformSchedulerOnPlateau:
